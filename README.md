@@ -12,10 +12,13 @@ npm install djs-tts
 const { playTTS } = require("djs-tts");
 
 playTTS({
-    voiceChannel: voiceChannel, // voiceChannel.type === "VoiceChannel"
+    voiceChannel: voiceChannel, // <GuildChannel>.type === "VoiceChannel"
     text: text, // String
-    guild: message.guild, // <client>.guilds.cache.get(guild.id)
-    language: language // String, exemple : "en", "fr"
+    guild: message.guild, // <Guild>
+    language: language, // String, automatic : "en"
+    logsChannel: logsChannel, // <GuildChannel> 
+    executor: exectutor, // if you do not have a personalLogsMessage
+    personalLogs: personalLogs // String, options : { "[user]" => @member, [userTag] => username#0000, [userId] => 123456789012345678, [text] => text }
       });
 ```
 ```js
@@ -39,6 +42,7 @@ const client = new Client({
 
 const token = "";
 const prefix = "!";
+const logsChannelId = "";
 
 client.on("ready", async (client) => {
   console.log(client.user.tag + " is online !");
@@ -53,18 +57,25 @@ client.on("messageCreate", async (message) => {
     if (command === "playtts") {
       const text = args.join(" ");
       const voiceChannel = message.member?.voice.channel;
+      let logsChannel = client.channels.cache.get(logsChannelId);
   
       if (!voiceChannel) {
         return message.reply("You are not in a voice channel!");
-      }
+      };
+      if(!logsChannel){
+        logsChannel = false;
+      };
   
       playTTS({
         voiceChannel: voiceChannel,
         text: text,
         guild: message.guild,
-        // language: "en"
+        language: "en",
+        logsChannel: logsChannel,
+        personalLogs: "Executor : [userTag] ([userId])\nText : [text]"
+        // no need executor here
       });
-    }
+    };
 });
 
 client.login(token).catch(err => console.log(err));
