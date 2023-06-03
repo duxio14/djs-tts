@@ -17,7 +17,7 @@ playTTS({
     guild: message.guild, // <Guild>
     language: language, // String, automatic : "en"
     logsChannel: logsChannel, // <GuildChannel> 
-    executor: exectutor, // if you do not have a personalLogsMessage
+    executor: exectutor, // <GuildMember>
     personalLogs: personalLogs // String, options : { "[user]" => @member, [userTag] => username#0000, [userId] => 123456789012345678, [text] => text }
       });
 ```
@@ -72,8 +72,8 @@ client.on("messageCreate", async (message) => {
         guild: message.guild,
         language: "en",
         logsChannel: logsChannel,
-        personalLogs: "Executor : [userTag] ([userId])\nText : [text]"
-        // no need executor here
+        personalLogs: "Executor : [userTag] ([userId])\nText : [text]",
+        executor: message.author
       });
     };
 });
